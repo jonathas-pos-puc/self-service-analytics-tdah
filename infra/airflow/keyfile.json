@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "self-service-analytics-tdah",
+  "private_key_id": "dae7770d530e266361490608459ea5faca9949c6",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDMVDVptlPbt9kb\n2CzpS9vffe9BurR3rDjKxDOK9f+M1U1xe2+M1VC1wSVlkFUIrazMVlUucbX9B35k\nu4DYuYF7ickgQgmZhNF/6wrQw8SeXrBFyjCY7Ry1tYrsF4Zf8uvdOq0AybLdnLQO\nMwMLUqq/6V8zXqu0nnnoDXtXoVWLzWs8WVtCXH/aymLLvvQg+rhFpXm1lPkGyVwb\nbJ2m5+49gtovg4TsMA78haE64t+Sq0Tka+aRrM+WCdbzQJWIjFQDJc14gbsS6frL\nfUztbm8nJPSawpWFf3eLRAncQrL0B8/mwJhb97V1+WaQzLE8hEIa+YX9HelgT0+5\nxjwIweHlAgMBAAECggEADmCoh4E8YlwL62EpO9tKI+5FHR9pnnggYOgwZklMC5lg\nwyj33vWNodRu8LgYu60Y2SIECWoX76+MzcLB3L4k5c/6tonfCg3l/fXIg4sa9Tfd\neHOzOreIiyK0nUtEedDqlt0PmlwW+XAS3WLqhmvxNuLRf5hcRa/XDSSRtsdT8SvJ\nel7KuugnPYVEfKIRFmKQlWLTcDDoX1s5Qd0ezfjY/NmlS2amh9UP41OJU+UFQbhO\nxXpndIyZQHMYt74ja1LeMOly9Ndci2/yzAkPH15sihTMZrS2v+F1OH7rAKiAdgNk\nXSlZWwMeoyTBuJEu5zPM50eAmH2KyuojcbdWDXiUawKBgQDrN4m8YIezp+N/rlbB\nDGZpX7wMOtLyYcfP3NW6K/kTfMd23qmLYXRERSKlN7eQ6So+V5hCFzj5pujyiV3T\nHVrm3uxhML7GBPakcIzgUXubQF+xVHwl7E2icZQJ5rpxB1vfv6ZTkhIGtTBoZJXL\nMa7Ko7jE04GuXH3eoG8wCsLcKwKBgQDeYgDFrMtve1iwb8kyarpH9i6poJlNqMaO\n/NAV9unqgfd5IUeP34ZuZ15I9TAvHf7Kqb1NUyx7+NLxMMxZzkvZkkWWdFI3Q/AM\njRNjkIKczdqi7IDr+I4eKJXMMEr963VgEJSCHGQ3lDa4/CxE+gCC7Mev0KR1Y7/E\nxAc0I5liLwKBgFIVAXXBYdmp3tPxrMiVYS+ofuDtritzP90jvVnIepT4WEr9DMFc\n8svYLGzncqGZHGrA+pslq3ZDbsskcJ95gP1MEcUg05IarU9ZD3BAPxhAcKRbTS+W\ntMjZRcXmxG0pGkCMiqhjMvMwS4JCh5tu7QY99/6HqJuGH06PQf3L45AdAoGBAL9b\nwaJYAG6by0N3zb+ui0ElHB4m7gQfeUzNSxm7cKm00IjRFE0/YORb2owZQC8rNnaZ\n/SUurxa2lH2rKg0VMbu03GCNE7ouob+LHeYNEfdwQ/TyYjWrmk9lSRF9dOpu1H+n\nhMM5Pxt8VGJ1zHpGTm5a5bHqbbn97aSZskExaOlNAoGAATlLqbKbTP6oiqxmAbUt\n7cp52ouDuNdXT+5AaDxfH33wJX0LEXIzCi3ccn40uRwXAigWPVLsliosJOWR4/M/\nIJ3bE185ZnQFaRvSlx36eqhG6jlebqIkJ67JkASpi0WDmGlFXc0hVJlv25m1CbLW\nKAgw1VBQNZr9DsI0vsIf1uI=\n-----END PRIVATE KEY-----\n",
+  "client_email": "ssa-tdah-composer@self-service-analytics-tdah.iam.gserviceaccount.com",
+  "client_id": "110458117214741511472",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ssa-tdah-composer%40self-service-analytics-tdah.iam.gserviceaccount.com"
+}
