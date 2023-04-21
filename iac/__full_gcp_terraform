@@ -1,0 +1,125 @@
+# terraform import google_compute_firewall.gke_ssa_tdah_gke_test_2_7b723920_inkubelet projects/self-service-analytics-tdah/global/firewalls/gke-ssa-tdah-gke-test-2-7b723920-inkubelet
+resource "google_container_cluster" "ssa_tdah_gke_test_2" {
+  addons_config {
+    dns_cache_config {
+      enabled = true
+    }
+    gce_persistent_disk_csi_driver_config {
+      enabled = true
+    }
+    gcp_filestore_csi_driver_config {
+      enabled = true
+    }
+    network_policy_config {
+      disabled = true
+    }
+  }
+  cluster_autoscaling {
+    auto_provisioning_defaults {
+      image_type      = "COS_CONTAINERD"
+      oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/userinfo.email"]
+      service_account = "ssa-tdah-composer@self-service-analytics-tdah.iam.gserviceaccount.com"
+    }
+    autoscaling_profile = "OPTIMIZE_UTILIZATION"
+    enabled             = true
+    resource_limits {
+      maximum       = 1000000000
+      resource_type = "cpu"
+    }
+    resource_limits {
+      maximum       = 1000000000
+      resource_type = "memory"
+    }
+    resource_limits {
+      maximum       = 1000000000
+      resource_type = "nvidia-tesla-t4"
+    }
+    resource_limits {
+      maximum       = 1000000000
+      resource_type = "nvidia-tesla-a100"
+    }
+  }
+  cluster_ipv4_cidr = "10.72.128.0/17"
+  cluster_telemetry {
+    type = "ENABLED"
+  }
+  database_encryption {
+    state = "DECRYPTED"
+  }
+  datapath_provider           = "ADVANCED_DATAPATH"
+  default_max_pods_per_node   = 110
+  enable_autopilot            = true
+  enable_intranode_visibility = true
+  enable_shielded_nodes       = true
+  ip_allocation_policy {
+    cluster_ipv4_cidr_block       = "10.72.128.0/17"
+    cluster_secondary_range_name  = "gke-ssa-tdah-gke-test-2-pods-7b723920"
+    services_ipv4_cidr_block      = "10.73.0.0/22"
+    services_secondary_range_name = "gke-ssa-tdah-gke-test-2-services-7b723920"
+  }
+  location = "us-central1"
+  logging_config {
+    enable_components = ["SYSTEM_COMPONENTS", "WORKLOADS"]
+  }
+  master_auth {
+    client_certificate_config {
+      issue_client_certificate = false
+    }
+  }
+  monitoring_config {
+    enable_components = ["SYSTEM_COMPONENTS"]
+  }
+  name    = "ssa-tdah-gke-test-2"
+  network = "projects/self-service-analytics-tdah/global/networks/default"
+  network_policy {
+    enabled  = false
+    provider = "PROVIDER_UNSPECIFIED"
+  }
+  networking_mode = "VPC_NATIVE"
+  node_config {
+    disk_size_gb = 100
+    disk_type    = "pd-standard"
+    image_type   = "COS_CONTAINERD"
+    machine_type = "e2-medium"
+    metadata = {
+      disable-legacy-endpoints = "true"
+    }
+    oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/userinfo.email"]
+    service_account = "ssa-tdah-composer@self-service-analytics-tdah.iam.gserviceaccount.com"
+    shielded_instance_config {
+      enable_integrity_monitoring = true
+      enable_secure_boot          = true
+    }
+    workload_metadata_config {
+      mode          = "GKE_METADATA"
+      node_metadata = "GKE_METADATA_SERVER"
+    }
+  }
+  node_locations = ["us-central1-a", "us-central1-b", "us-central1-c", "us-central1-f"]
+  node_version   = "1.24.10-gke.2300"
+  notification_config {
+    pubsub {
+      enabled = false
+    }
+  }
+  pod_security_policy_config {
+    enabled = false
+  }
+  private_cluster_config {
+    enable_private_endpoint = false
+    master_global_access_config {
+      enabled = false
+    }
+  }
+  project = "self-service-analytics-tdah"
+  release_channel {
+    channel = "REGULAR"
+  }
+  subnetwork = "projects/self-service-analytics-tdah/regions/us-central1/subnetworks/default"
+  vertical_pod_autoscaling {
+    enabled = true
+  }
+  workload_identity_config {
+    workload_pool = "self-service-analytics-tdah.svc.id.goog"
+  }
+}

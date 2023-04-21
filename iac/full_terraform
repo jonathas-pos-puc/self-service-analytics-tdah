@@ -1,0 +1,649 @@
+resource "google_bigquery_dataset" "ssa_tdah" {
+  access {
+    role          = "OWNER"
+    special_group = "projectOwners"
+  }
+  access {
+    role          = "OWNER"
+    user_by_email = "jonathas.sampaio.pos.puc@gmail.com"
+  }
+  access {
+    role = "OWNER"
+  }
+  access {
+    role          = "READER"
+    special_group = "projectReaders"
+  }
+  access {
+    role          = "WRITER"
+    special_group = "projectWriters"
+  }
+  dataset_id                 = "ssa_tdah"
+  delete_contents_on_destroy = false
+  location                   = "US"
+  project                    = "self-service-analytics-tdah"
+}
+# terraform import google_bigquery_dataset.ssa_tdah projects/self-service-analytics-tdah/datasets/ssa_tdah
+resource "google_compute_firewall" "default_allow_icmp" {
+  allow {
+    protocol = "icmp"
+  }
+  description   = "Allow ICMP from anywhere"
+  direction     = "INGRESS"
+  name          = "default-allow-icmp"
+  network       = "https://www.googleapis.com/compute/v1/projects/self-service-analytics-tdah/global/networks/default"
+  priority      = 65534
+  project       = "self-service-analytics-tdah"
+  source_ranges = ["0.0.0.0/0"]
+}
+# terraform import google_compute_firewall.default_allow_icmp projects/self-service-analytics-tdah/global/firewalls/default-allow-icmp
+resource "google_compute_disk" "pvc_ca2b5ca7_dfba_456f_b415_b6196b62ea21" {
+  description = "{\"kubernetes.io/created-for/pv/name\":\"pvc-ca2b5ca7-dfba-456f-b415-b6196b62ea21\",\"kubernetes.io/created-for/pvc/name\":\"airflow-redis-volume-airflow-redis-0\",\"kubernetes.io/created-for/pvc/namespace\":\"default\",\"storage.gke.io/created-by\":\"pd.csi.storage.gke.io\"}"
+  labels = {
+    goog-gke-volume                = ""
+    goog-composer-location         = "us-east1"
+    goog-composer-environment      = "ssa-tdah-etl"
+    goog-composer-environment-uuid = "e741b367-b0de-405c-9d12-a0ea284f1d4d"
+    goog-composer-version          = "composer-1-20-8-airflow-2-3-4"
+  }
+  name                      = "pvc-ca2b5ca7-dfba-456f-b415-b6196b62ea21"
+  physical_block_size_bytes = 4096
+  project                   = "self-service-analytics-tdah"
+  size                      = 2
+  type                      = "pd-standard"
+  zone                      = "us-east1-b"
+}
+# terraform import google_compute_disk.pvc_ca2b5ca7_dfba_456f_b415_b6196b62ea21 projects/self-service-analytics-tdah/zones/us-east1-b/disks/pvc-ca2b5ca7-dfba-456f-b415-b6196b62ea21
+resource "google_compute_disk" "pvc_9e88028b_fa0f_401b_94c9_5825916c9558" {
+  description = "{\"kubernetes.io/created-for/pv/name\":\"pvc-9e88028b-fa0f-401b-94c9-5825916c9558\",\"kubernetes.io/created-for/pvc/name\":\"airflow-redis-volume-airflow-redis-0\",\"kubernetes.io/created-for/pvc/namespace\":\"default\",\"storage.gke.io/created-by\":\"pd.csi.storage.gke.io\"}"
+  labels = {
+    goog-composer-environment-uuid = "4dfcebec-07ab-4c24-a8bf-c745d8000647"
+    goog-composer-location         = "us-central1"
+    goog-gke-volume                = ""
+    goog-composer-version          = "composer-1-20-11-airflow-1-10-15"
+    goog-composer-environment      = "example-environment"
+  }
+  name                      = "pvc-9e88028b-fa0f-401b-94c9-5825916c9558"
+  physical_block_size_bytes = 4096
+  project                   = "self-service-analytics-tdah"
+  size                      = 2
+  type                      = "pd-standard"
+  zone                      = "us-central1-a"
+}
+# terraform import google_compute_disk.pvc_9e88028b_fa0f_401b_94c9_5825916c9558 projects/self-service-analytics-tdah/zones/us-central1-a/disks/pvc-9e88028b-fa0f-401b-94c9-5825916c9558
+resource "google_compute_firewall" "default_allow_rdp" {
+  allow {
+    ports    = ["3389"]
+    protocol = "tcp"
+  }
+  description   = "Allow RDP from anywhere"
+  direction     = "INGRESS"
+  name          = "default-allow-rdp"
+  network       = "https://www.googleapis.com/compute/v1/projects/self-service-analytics-tdah/global/networks/default"
+  priority      = 65534
+  project       = "self-service-analytics-tdah"
+  source_ranges = ["0.0.0.0/0"]
+}
+# terraform import google_compute_firewall.default_allow_rdp projects/self-service-analytics-tdah/global/firewalls/default-allow-rdp
+resource "google_compute_firewall" "default_allow_internal" {
+  allow {
+    ports    = ["0-65535"]
+    protocol = "tcp"
+  }
+  allow {
+    ports    = ["0-65535"]
+    protocol = "udp"
+  }
+  allow {
+    protocol = "icmp"
+  }
+  description   = "Allow internal traffic on the default network"
+  direction     = "INGRESS"
+  name          = "default-allow-internal"
+  network       = "https://www.googleapis.com/compute/v1/projects/self-service-analytics-tdah/global/networks/default"
+  priority      = 65534
+  project       = "self-service-analytics-tdah"
+  source_ranges = ["10.128.0.0/9"]
+}
+# terraform import google_compute_firewall.default_allow_internal projects/self-service-analytics-tdah/global/firewalls/default-allow-internal
+resource "google_project" "self_service_analytics_tdah" {
+  auto_create_network = true
+  billing_account     = "01BF6E-F8DF9E-3E6AF1"
+  name                = "self-service-analytics-tdah"
+  project_id          = "self-service-analytics-tdah"
+}
+# terraform import google_project.self_service_analytics_tdah projects/self-service-analytics-tdah
+resource "google_compute_firewall" "gke_ssa_tdah_gke_test_2_7b723920_vms" {
+  allow {
+    ports    = ["1-65535"]
+    protocol = "tcp"
+  }
+  allow {
+    ports    = ["1-65535"]
+    protocol = "udp"
+  }
+  allow {
+    protocol = "icmp"
+  }
+  direction     = "INGRESS"
+  name          = "gke-ssa-tdah-gke-test-2-7b723920-vms"
+  network       = "https://www.googleapis.com/compute/v1/projects/self-service-analytics-tdah/global/networks/default"
+  priority      = 1000
+  project       = "self-service-analytics-tdah"
+  source_ranges = ["10.128.0.0/9"]
+  target_tags   = ["gke-ssa-tdah-gke-test-2-7b723920-node"]
+}
+# terraform import google_compute_firewall.gke_ssa_tdah_gke_test_2_7b723920_vms projects/self-service-analytics-tdah/global/firewalls/gke-ssa-tdah-gke-test-2-7b723920-vms
+resource "google_compute_firewall" "gke_ssa_tdah_gke_test_2_7b723920_exkubelet" {
+  deny {
+    ports    = ["10255"]
+    protocol = "tcp"
+  }
+  direction     = "INGRESS"
+  name          = "gke-ssa-tdah-gke-test-2-7b723920-exkubelet"
+  network       = "https://www.googleapis.com/compute/v1/projects/self-service-analytics-tdah/global/networks/default"
+  priority      = 1000
+  project       = "self-service-analytics-tdah"
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["gke-ssa-tdah-gke-test-2-7b723920-node"]
+}
+# terraform import google_compute_firewall.gke_ssa_tdah_gke_test_2_7b723920_exkubelet projects/self-service-analytics-tdah/global/firewalls/gke-ssa-tdah-gke-test-2-7b723920-exkubelet
+resource "google_compute_firewall" "gke_ssa_tdah_gke_test_2_7b723920_all" {
+  allow {
+    protocol = "ah"
+  }
+  allow {
+    protocol = "esp"
+  }
+  allow {
+    protocol = "icmp"
+  }
+  allow {
+    protocol = "sctp"
+  }
+  allow {
+    protocol = "tcp"
+  }
+  allow {
+    protocol = "udp"
+  }
+  direction     = "INGRESS"
+  name          = "gke-ssa-tdah-gke-test-2-7b723920-all"
+  network       = "https://www.googleapis.com/compute/v1/projects/self-service-analytics-tdah/global/networks/default"
+  priority      = 1000
+  project       = "self-service-analytics-tdah"
+  source_ranges = ["10.72.128.0/17"]
+  target_tags   = ["gke-ssa-tdah-gke-test-2-7b723920-node"]
+}
+# terraform import google_compute_firewall.gke_ssa_tdah_gke_test_2_7b723920_all projects/self-service-analytics-tdah/global/firewalls/gke-ssa-tdah-gke-test-2-7b723920-all
+resource "google_compute_firewall" "default_allow_ssh" {
+  allow {
+    ports    = ["22"]
+    protocol = "tcp"
+  }
+  description   = "Allow SSH from anywhere"
+  direction     = "INGRESS"
+  name          = "default-allow-ssh"
+  network       = "https://www.googleapis.com/compute/v1/projects/self-service-analytics-tdah/global/networks/default"
+  priority      = 65534
+  project       = "self-service-analytics-tdah"
+  source_ranges = ["0.0.0.0/0"]
+}
+# terraform import google_compute_firewall.default_allow_ssh projects/self-service-analytics-tdah/global/firewalls/default-allow-ssh
+resource "google_compute_firewall" "gke_ssa_tdah_gke_test_2_7b723920_inkubelet" {
+  allow {
+    ports    = ["10255"]
+    protocol = "tcp"
+  }
+  direction     = "INGRESS"
+  name          = "gke-ssa-tdah-gke-test-2-7b723920-inkubelet"
+  network       = "https://www.googleapis.com/compute/v1/projects/self-service-analytics-tdah/global/networks/default"
+  priority      = 999
+  project       = "self-service-analytics-tdah"
+  source_ranges = ["10.72.128.0/17"]
+  source_tags   = ["gke-ssa-tdah-gke-test-2-7b723920-node"]
+  target_tags   = ["gke-ssa-tdah-gke-test-2-7b723920-node"]
+}
+# terraform import google_compute_firewall.gke_ssa_tdah_gke_test_2_7b723920_inkubelet projects/self-service-analytics-tdah/global/firewalls/gke-ssa-tdah-gke-test-2-7b723920-inkubelet
+resource "google_container_cluster" "ssa_tdah_gke_test_2" {
+  addons_config {
+    dns_cache_config {
+      enabled = true
+    }
+    gce_persistent_disk_csi_driver_config {
+      enabled = true
+    }
+    gcp_filestore_csi_driver_config {
+      enabled = true
+    }
+    network_policy_config {
+      disabled = true
+    }
+  }
+  cluster_autoscaling {
+    auto_provisioning_defaults {
+      image_type      = "COS_CONTAINERD"
+      oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/userinfo.email"]
+      service_account = "ssa-tdah-composer@self-service-analytics-tdah.iam.gserviceaccount.com"
+    }
+    autoscaling_profile = "OPTIMIZE_UTILIZATION"
+    enabled             = true
+    resource_limits {
+      maximum       = 1000000000
+      resource_type = "cpu"
+    }
+    resource_limits {
+      maximum       = 1000000000
+      resource_type = "memory"
+    }
+    resource_limits {
+      maximum       = 1000000000
+      resource_type = "nvidia-tesla-t4"
+    }
+    resource_limits {
+      maximum       = 1000000000
+      resource_type = "nvidia-tesla-a100"
+    }
+  }
+  cluster_ipv4_cidr = "10.72.128.0/17"
+  cluster_telemetry {
+    type = "ENABLED"
+  }
+  database_encryption {
+    state = "DECRYPTED"
+  }
+  datapath_provider           = "ADVANCED_DATAPATH"
+  default_max_pods_per_node   = 110
+  enable_autopilot            = true
+  enable_intranode_visibility = true
+  enable_shielded_nodes       = true
+  ip_allocation_policy {
+    cluster_ipv4_cidr_block       = "10.72.128.0/17"
+    cluster_secondary_range_name  = "gke-ssa-tdah-gke-test-2-pods-7b723920"
+    services_ipv4_cidr_block      = "10.73.0.0/22"
+    services_secondary_range_name = "gke-ssa-tdah-gke-test-2-services-7b723920"
+  }
+  location = "us-central1"
+  logging_config {
+    enable_components = ["SYSTEM_COMPONENTS", "WORKLOADS"]
+  }
+  master_auth {
+    client_certificate_config {
+      issue_client_certificate = false
+    }
+  }
+  monitoring_config {
+    enable_components = ["SYSTEM_COMPONENTS"]
+  }
+  name    = "ssa-tdah-gke-test-2"
+  network = "projects/self-service-analytics-tdah/global/networks/default"
+  network_policy {
+    enabled  = false
+    provider = "PROVIDER_UNSPECIFIED"
+  }
+  networking_mode = "VPC_NATIVE"
+  node_config {
+    disk_size_gb = 100
+    disk_type    = "pd-standard"
+    image_type   = "COS_CONTAINERD"
+    machine_type = "e2-medium"
+    metadata = {
+      disable-legacy-endpoints = "true"
+    }
+    oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/userinfo.email"]
+    service_account = "ssa-tdah-composer@self-service-analytics-tdah.iam.gserviceaccount.com"
+    shielded_instance_config {
+      enable_integrity_monitoring = true
+      enable_secure_boot          = true
+    }
+    workload_metadata_config {
+      mode          = "GKE_METADATA"
+      node_metadata = "GKE_METADATA_SERVER"
+    }
+  }
+  node_locations = ["us-central1-a", "us-central1-b", "us-central1-c", "us-central1-f"]
+  node_version   = "1.24.10-gke.2300"
+  notification_config {
+    pubsub {
+      enabled = false
+    }
+  }
+  pod_security_policy_config {
+    enabled = false
+  }
+  private_cluster_config {
+    enable_private_endpoint = false
+    master_global_access_config {
+      enabled = false
+    }
+  }
+  project = "self-service-analytics-tdah"
+  release_channel {
+    channel = "REGULAR"
+  }
+  subnetwork = "projects/self-service-analytics-tdah/regions/us-central1/subnetworks/default"
+  vertical_pod_autoscaling {
+    enabled = true
+  }
+  workload_identity_config {
+    workload_pool = "self-service-analytics-tdah.svc.id.goog"
+  }
+}
+# terraform import google_container_cluster.ssa_tdah_gke_test_2 self-service-analytics-tdah/us-central1/ssa-tdah-gke-test-2
+resource "google_service_account" "ssa_tdah_composer" {
+  account_id   = "ssa-tdah-composer"
+  description  = "ssa-tdah-composer"
+  display_name = "ssa-tdah-composer"
+  project      = "self-service-analytics-tdah"
+}
+# terraform import google_service_account.ssa_tdah_composer projects/self-service-analytics-tdah/serviceAccounts/ssa-tdah-composer@self-service-analytics-tdah.iam.gserviceaccount.com
+resource "google_project_service" "clouddebugger_googleapis_com" {
+  project = "877794803636"
+  service = "clouddebugger.googleapis.com"
+}
+# terraform import google_project_service.clouddebugger_googleapis_com 877794803636/clouddebugger.googleapis.com
+resource "google_project_service" "composer_googleapis_com" {
+  project = "877794803636"
+  service = "composer.googleapis.com"
+}
+# terraform import google_project_service.composer_googleapis_com 877794803636/composer.googleapis.com
+resource "google_project_service" "artifactregistry_googleapis_com" {
+  project = "877794803636"
+  service = "artifactregistry.googleapis.com"
+}
+# terraform import google_project_service.artifactregistry_googleapis_com 877794803636/artifactregistry.googleapis.com
+resource "google_logging_log_sink" "a_default" {
+  destination            = "logging.googleapis.com/projects/self-service-analytics-tdah/locations/global/buckets/_Default"
+  filter                 = "NOT LOG_ID(\"cloudaudit.googleapis.com/activity\") AND NOT LOG_ID(\"externalaudit.googleapis.com/activity\") AND NOT LOG_ID(\"cloudaudit.googleapis.com/system_event\") AND NOT LOG_ID(\"externalaudit.googleapis.com/system_event\") AND NOT LOG_ID(\"cloudaudit.googleapis.com/access_transparency\") AND NOT LOG_ID(\"externalaudit.googleapis.com/access_transparency\")"
+  name                   = "_Default"
+  project                = "877794803636"
+  unique_writer_identity = true
+}
+# terraform import google_logging_log_sink.a_default 877794803636###_Default
+resource "google_project_service" "cloudresourcemanager_googleapis_com" {
+  project = "877794803636"
+  service = "cloudresourcemanager.googleapis.com"
+}
+# terraform import google_project_service.cloudresourcemanager_googleapis_com 877794803636/cloudresourcemanager.googleapis.com
+resource "google_project_service" "cloudtrace_googleapis_com" {
+  project = "877794803636"
+  service = "cloudtrace.googleapis.com"
+}
+# terraform import google_project_service.cloudtrace_googleapis_com 877794803636/cloudtrace.googleapis.com
+resource "google_project_service" "monitoring_googleapis_com" {
+  project = "877794803636"
+  service = "monitoring.googleapis.com"
+}
+# terraform import google_project_service.monitoring_googleapis_com 877794803636/monitoring.googleapis.com
+resource "google_project_service" "oslogin_googleapis_com" {
+  project = "877794803636"
+  service = "oslogin.googleapis.com"
+}
+# terraform import google_project_service.oslogin_googleapis_com 877794803636/oslogin.googleapis.com
+resource "google_project_service" "compute_googleapis_com" {
+  project = "877794803636"
+  service = "compute.googleapis.com"
+}
+# terraform import google_project_service.compute_googleapis_com 877794803636/compute.googleapis.com
+resource "google_project_service" "containeranalysis_googleapis_com" {
+  project = "877794803636"
+  service = "containeranalysis.googleapis.com"
+}
+# terraform import google_project_service.containeranalysis_googleapis_com 877794803636/containeranalysis.googleapis.com
+resource "google_project_service" "cloudasset_googleapis_com" {
+  project = "877794803636"
+  service = "cloudasset.googleapis.com"
+}
+# terraform import google_project_service.cloudasset_googleapis_com 877794803636/cloudasset.googleapis.com
+resource "google_logging_log_sink" "a_required" {
+  destination            = "logging.googleapis.com/projects/self-service-analytics-tdah/locations/global/buckets/_Required"
+  filter                 = "LOG_ID(\"cloudaudit.googleapis.com/activity\") OR LOG_ID(\"externalaudit.googleapis.com/activity\") OR LOG_ID(\"cloudaudit.googleapis.com/system_event\") OR LOG_ID(\"externalaudit.googleapis.com/system_event\") OR LOG_ID(\"cloudaudit.googleapis.com/access_transparency\") OR LOG_ID(\"externalaudit.googleapis.com/access_transparency\")"
+  name                   = "_Required"
+  project                = "877794803636"
+  unique_writer_identity = true
+}
+# terraform import google_logging_log_sink.a_required 877794803636###_Required
+resource "google_project_service" "container_googleapis_com" {
+  project = "877794803636"
+  service = "container.googleapis.com"
+}
+# terraform import google_project_service.container_googleapis_com 877794803636/container.googleapis.com
+resource "google_project_service" "iam_googleapis_com" {
+  project = "877794803636"
+  service = "iam.googleapis.com"
+}
+# terraform import google_project_service.iam_googleapis_com 877794803636/iam.googleapis.com
+resource "google_project_service" "containerfilesystem_googleapis_com" {
+  project = "877794803636"
+  service = "containerfilesystem.googleapis.com"
+}
+# terraform import google_project_service.containerfilesystem_googleapis_com 877794803636/containerfilesystem.googleapis.com
+resource "google_project_service" "serviceusage_googleapis_com" {
+  project = "877794803636"
+  service = "serviceusage.googleapis.com"
+}
+# terraform import google_project_service.serviceusage_googleapis_com 877794803636/serviceusage.googleapis.com
+resource "google_project_service" "pubsub_googleapis_com" {
+  project = "877794803636"
+  service = "pubsub.googleapis.com"
+}
+# terraform import google_project_service.pubsub_googleapis_com 877794803636/pubsub.googleapis.com
+resource "google_project_service" "cloudapis_googleapis_com" {
+  project = "877794803636"
+  service = "cloudapis.googleapis.com"
+}
+# terraform import google_project_service.cloudapis_googleapis_com 877794803636/cloudapis.googleapis.com
+resource "google_project_service" "logging_googleapis_com" {
+  project = "877794803636"
+  service = "logging.googleapis.com"
+}
+# terraform import google_project_service.logging_googleapis_com 877794803636/logging.googleapis.com
+resource "google_project_service" "storage_api_googleapis_com" {
+  project = "877794803636"
+  service = "storage-api.googleapis.com"
+}
+# terraform import google_project_service.storage_api_googleapis_com 877794803636/storage-api.googleapis.com
+resource "google_project_service" "sqladmin_googleapis_com" {
+  project = "877794803636"
+  service = "sqladmin.googleapis.com"
+}
+# terraform import google_project_service.sqladmin_googleapis_com 877794803636/sqladmin.googleapis.com
+resource "google_project_service" "bigquerymigration_googleapis_com" {
+  project = "877794803636"
+  service = "bigquerymigration.googleapis.com"
+}
+# terraform import google_project_service.bigquerymigration_googleapis_com 877794803636/bigquerymigration.googleapis.com
+resource "google_project_service" "translate_googleapis_com" {
+  project = "877794803636"
+  service = "translate.googleapis.com"
+}
+# terraform import google_project_service.translate_googleapis_com 877794803636/translate.googleapis.com
+resource "google_project_service" "servicemanagement_googleapis_com" {
+  project = "877794803636"
+  service = "servicemanagement.googleapis.com"
+}
+# terraform import google_project_service.servicemanagement_googleapis_com 877794803636/servicemanagement.googleapis.com
+resource "google_project_service" "osconfig_googleapis_com" {
+  project = "877794803636"
+  service = "osconfig.googleapis.com"
+}
+# terraform import google_project_service.osconfig_googleapis_com 877794803636/osconfig.googleapis.com
+resource "google_project_service" "storage_component_googleapis_com" {
+  project = "877794803636"
+  service = "storage-component.googleapis.com"
+}
+# terraform import google_project_service.storage_component_googleapis_com 877794803636/storage-component.googleapis.com
+resource "google_project_service" "sql_component_googleapis_com" {
+  project = "877794803636"
+  service = "sql-component.googleapis.com"
+}
+# terraform import google_project_service.sql_component_googleapis_com 877794803636/sql-component.googleapis.com
+resource "google_project_service" "cloudbuild_googleapis_com" {
+  project = "877794803636"
+  service = "cloudbuild.googleapis.com"
+}
+# terraform import google_project_service.cloudbuild_googleapis_com 877794803636/cloudbuild.googleapis.com
+resource "google_project_service" "containerregistry_googleapis_com" {
+  project = "877794803636"
+  service = "containerregistry.googleapis.com"
+}
+# terraform import google_project_service.containerregistry_googleapis_com 877794803636/containerregistry.googleapis.com
+resource "google_project_service" "datastudio_googleapis_com" {
+  project = "877794803636"
+  service = "datastudio.googleapis.com"
+}
+# terraform import google_project_service.datastudio_googleapis_com 877794803636/datastudio.googleapis.com
+resource "google_storage_bucket" "artifacts_self_service_analytics_tdah_appspot_com" {
+  force_destroy            = false
+  location                 = "US"
+  name                     = "artifacts.self-service-analytics-tdah.appspot.com"
+  project                  = "self-service-analytics-tdah"
+  public_access_prevention = "inherited"
+  storage_class            = "STANDARD"
+}
+# terraform import google_storage_bucket.artifacts_self_service_analytics_tdah_appspot_com artifacts.self-service-analytics-tdah.appspot.com
+resource "google_storage_bucket" "self_service_analytics_tdah_silver" {
+  force_destroy               = false
+  location                    = "US"
+  name                        = "self-service-analytics-tdah-silver"
+  project                     = "self-service-analytics-tdah"
+  public_access_prevention    = "enforced"
+  storage_class               = "STANDARD"
+  uniform_bucket_level_access = true
+}
+# terraform import google_storage_bucket.self_service_analytics_tdah_silver self-service-analytics-tdah-silver
+resource "google_project_service" "bigquery_googleapis_com" {
+  project = "877794803636"
+  service = "bigquery.googleapis.com"
+}
+# terraform import google_project_service.bigquery_googleapis_com 877794803636/bigquery.googleapis.com
+resource "google_project_service" "run_googleapis_com" {
+  project = "877794803636"
+  service = "run.googleapis.com"
+}
+# terraform import google_project_service.run_googleapis_com 877794803636/run.googleapis.com
+resource "google_project_service" "storage_googleapis_com" {
+  project = "877794803636"
+  service = "storage.googleapis.com"
+}
+# terraform import google_project_service.storage_googleapis_com 877794803636/storage.googleapis.com
+resource "google_project_service" "deploymentmanager_googleapis_com" {
+  project = "877794803636"
+  service = "deploymentmanager.googleapis.com"
+}
+# terraform import google_project_service.deploymentmanager_googleapis_com 877794803636/deploymentmanager.googleapis.com
+resource "google_project_service" "autoscaling_googleapis_com" {
+  project = "877794803636"
+  service = "autoscaling.googleapis.com"
+}
+# terraform import google_project_service.autoscaling_googleapis_com 877794803636/autoscaling.googleapis.com
+resource "google_storage_bucket" "us_east1_ssa_tdah_etl_fbe858c5_bucket" {
+  force_destroy = false
+  labels = {
+    goog-composer-environment      = "ssa-tdah-etl"
+    goog-composer-version          = "composer-1-17-8-airflow-2-1-4"
+    goog-composer-environment-uuid = "24166122-3a54-4fef-b881-0248b27f3347"
+    goog-composer-location         = "us-east1"
+  }
+  location                 = "US-EAST1"
+  name                     = "us-east1-ssa-tdah-etl-fbe858c5-bucket"
+  project                  = "self-service-analytics-tdah"
+  public_access_prevention = "inherited"
+  storage_class            = "STANDARD"
+}
+# terraform import google_storage_bucket.us_east1_ssa_tdah_etl_fbe858c5_bucket us-east1-ssa-tdah-etl-fbe858c5-bucket
+resource "google_storage_bucket" "us_central1_example_environ_75aa08f9_bucket" {
+  force_destroy = false
+  labels = {
+    goog-composer-environment-uuid = "4dfcebec-07ab-4c24-a8bf-c745d8000647"
+    goog-composer-location         = "us-central1"
+    goog-composer-environment      = "example-environment"
+    goog-composer-version          = "composer-1-20-11-airflow-1-10-15"
+  }
+  location                 = "US-CENTRAL1"
+  name                     = "us-central1-example-environ-75aa08f9-bucket"
+  project                  = "self-service-analytics-tdah"
+  public_access_prevention = "inherited"
+  storage_class            = "STANDARD"
+}
+# terraform import google_storage_bucket.us_central1_example_environ_75aa08f9_bucket us-central1-example-environ-75aa08f9-bucket
+resource "google_project_service" "bigquerystorage_googleapis_com" {
+  project = "877794803636"
+  service = "bigquerystorage.googleapis.com"
+}
+# terraform import google_project_service.bigquerystorage_googleapis_com 877794803636/bigquerystorage.googleapis.com
+resource "google_project_service" "iamcredentials_googleapis_com" {
+  project = "877794803636"
+  service = "iamcredentials.googleapis.com"
+}
+# terraform import google_project_service.iamcredentials_googleapis_com 877794803636/iamcredentials.googleapis.com
+resource "google_storage_bucket" "self_service_analytics_tdah_bronze" {
+  force_destroy               = false
+  location                    = "US"
+  name                        = "self-service-analytics-tdah-bronze"
+  project                     = "self-service-analytics-tdah"
+  public_access_prevention    = "enforced"
+  storage_class               = "STANDARD"
+  uniform_bucket_level_access = true
+}
+# terraform import google_storage_bucket.self_service_analytics_tdah_bronze self-service-analytics-tdah-bronze
+resource "google_storage_bucket" "self_service_analytics_tdah_gold" {
+  force_destroy               = false
+  location                    = "US"
+  name                        = "self-service-analytics-tdah-gold"
+  project                     = "self-service-analytics-tdah"
+  public_access_prevention    = "enforced"
+  storage_class               = "STANDARD"
+  uniform_bucket_level_access = true
+}
+# terraform import google_storage_bucket.self_service_analytics_tdah_gold self-service-analytics-tdah-gold
+resource "google_storage_bucket" "us_central1_ssa_tdah_airflo_426c879a_bucket" {
+  force_destroy = false
+  labels = {
+    goog-composer-location         = "us-central1"
+    goog-composer-version          = "composer-2-1-7-airflow-2-4-3"
+    goog-composer-environment      = "ssa-tdah-airflow"
+    goog-composer-environment-uuid = "f90f6cbf-73b4-433d-a26d-7303530e423f"
+  }
+  location                 = "US-CENTRAL1"
+  name                     = "us-central1-ssa-tdah-airflo-426c879a-bucket"
+  project                  = "self-service-analytics-tdah"
+  public_access_prevention = "inherited"
+  storage_class            = "STANDARD"
+}
+# terraform import google_storage_bucket.us_central1_ssa_tdah_airflo_426c879a_bucket us-central1-ssa-tdah-airflo-426c879a-bucket
+resource "google_project_service" "datastore_googleapis_com" {
+  project = "877794803636"
+  service = "datastore.googleapis.com"
+}
+# terraform import google_project_service.datastore_googleapis_com 877794803636/datastore.googleapis.com
+resource "google_storage_bucket" "us_central1_ssa_tdah_airflo_370c68b8_bucket" {
+  force_destroy = false
+  labels = {
+    goog-composer-location         = "us-central1"
+    goog-composer-environment      = "ssa-tdah-airflow2"
+    goog-composer-environment-uuid = "0b805a4e-07ba-4124-9d3a-9beba245343a"
+    goog-composer-version          = "composer-1-20-7-airflow-2-4-3"
+  }
+  location                 = "US-CENTRAL1"
+  name                     = "us-central1-ssa-tdah-airflo-370c68b8-bucket"
+  project                  = "self-service-analytics-tdah"
+  public_access_prevention = "inherited"
+  storage_class            = "STANDARD"
+}
+# terraform import google_storage_bucket.us_central1_ssa_tdah_airflo_370c68b8_bucket us-central1-ssa-tdah-airflo-370c68b8-bucket
+resource "google_storage_bucket" "us_east1_ssa_tdah_etl_65548228_bucket" {
+  force_destroy = false
+  labels = {
+    goog-composer-environment      = "ssa-tdah-etl"
+    goog-composer-environment-uuid = "e741b367-b0de-405c-9d12-a0ea284f1d4d"
+    goog-composer-location         = "us-east1"
+    goog-composer-version          = "composer-1-20-8-airflow-2-3-4"
+  }
+  location                 = "US-EAST1"
+  name                     = "us-east1-ssa-tdah-etl-65548228-bucket"
+  project                  = "self-service-analytics-tdah"
+  public_access_prevention = "inherited"
+  storage_class            = "STANDARD"
+}
+# terraform import google_storage_bucket.us_east1_ssa_tdah_etl_65548228_bucket us-east1-ssa-tdah-etl-65548228-bucket
