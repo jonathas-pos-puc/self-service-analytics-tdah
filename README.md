@@ -3,11 +3,12 @@
 Pós-graduação Lato Sensu em Gestão e Análise Estratégica de Dados 
 
 ## DATASUS
-AD - APAC de Laudos Diversos
-AM - APAC de Medicamentos
-PA - Produção Ambulatorial
-PS - Psicossocial
-SAD - Atenção Domiciliar
+Sistemas do DATASUS: 
+- AD - APAC de Laudos Diversos
+- AM - APAC de Medicamentos
+- PA - Produção Ambulatorial
+- PS - Psicossocial
+- SAD - Atenção Domiciliar
 
 ## GCP - FREE TIER
 Nível gratuito: todos os clientes do Google Cloud podem usar produtos específicos do Google Cloud, como o Compute Engine, o Cloud Storage e o BigQuery, gratuitamente, dentro dos limites de uso mensais especificados. Quando você permanecer dentro dos limites do nível gratuito, esses recursos não serão cobrados dos créditos do teste gratuito ou na forma de pagamento da sua conta do Cloud Billing depois que o período de avaliação terminar.
