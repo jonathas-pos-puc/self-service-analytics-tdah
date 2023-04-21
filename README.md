@@ -2,6 +2,13 @@
 
 Pós-graduação Lato Sensu em Gestão e Análise Estratégica de Dados 
 
+## DATASUS
+AD - APAC de Laudos Diversos
+AM - APAC de Medicamentos
+PA - Produção Ambulatorial
+PS - Psicossocial
+SAD - Atenção Domiciliar
+
 ## Trello
 
 Para ajudar na organização das tasks eu criei um trello
