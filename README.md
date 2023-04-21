@@ -14,16 +14,16 @@ Nível gratuito: todos os clientes do Google Cloud podem usar produtos específi
 
 ### COMPUTE
 - 1 instância da VM e2-micro não preemptiva por mês em uma das seguintes regiões dos EUA:
--- Oregon: us-west1
--- Iowa: us-central1
--- Carolina do Sul: us-east1
+    - Oregon: us-west1
+    - Iowa: us-central1
+    - Carolina do Sul: us-east1
 - Disco permanente padrão de 30 GB por mês
 - 5 GB de armazenamento de snapshots por mês nas seguintes regiões:
--- Oregon: us-west1
--- Iowa: us-central1
--- Carolina do Sul: us-east1
--- Taiwan: asia-east1
--- Bélgica: europe-west1
+    - Oregon: us-west1
+    - Iowa: us-central1
+    - Carolina do Sul: us-east1
+    - Taiwan: asia-east1
+    - Bélgica: europe-west1
 - 1 GB de saída de rede da América do Norte para todos os destinos regionais por mês (exceto China e Austrália
 
 O limite de instâncias e2-micro do Nível gratuito é definido por tempo, e não por instância. O uso qualificado de toda a instância e2-micro a cada mês será gratuito até que você tenha usado um número de horas equivalente ao total de horas no mês atual. Os cálculos de uso são combinados entre as regiões compatíveis.
