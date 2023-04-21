@@ -1,17 +1,24 @@
-variable "project" {
+variable "project_id" {
   description = "The ID of the project to create the bucket in."
   type        = string
   default     = "self-service-analytics-tdah"
 }
 
 variable "region" {
-  type = string
-  default = "us-east1"
+  type        = string
+  description = "The region to deploy resources in."
+  default = "us-central1"
 }
 
 variable "zone" {
-  type = string
-  default = "us-east1-b"
+  type        = string
+  description = "The zone to deploy resources in."
+  default = "us-central1-a"
+}
+
+variable "credentials_file" {
+  type        = string
+  description = "Path to the Google Cloud credentials file."
 }
 
 variable "lake_zones" {
