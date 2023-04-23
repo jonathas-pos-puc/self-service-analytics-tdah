@@ -6,8 +6,9 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app.py .
+COPY main.py .
 COPY credentials.json /app/
 COPY credentials.json .
 
-CMD ["python", "app.py"]
+# Run main.py when the container launches
+ENTRYPOINT ["python", "main.py"]

@@ -68,12 +68,12 @@ def upload_blob(file_buffer, bucket, bucket_name, blob_name):
 
 
 def main(
-    fonte="SIASUS",
-    epoca="200801_",
-    sistema="AD",
-    uf="MG",
-    data_comeco="2301",
-    data_termino="2305",
+    fonte,
+    epoca,
+    sistema,
+    uf,
+    data_comeco,
+    data_termino,
 ):
     """Baixa arquivo ou arquivos do datasus e salva na zona bronze do projeto
 
@@ -119,41 +119,36 @@ if __name__ == "__main__":
     # Validando se o file_name foi passado
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--FONTE",
+        "--fonte",
         dest="fonte",
-        default="SIASUS",
         help="Origem dos dados do datasus, Valor default: SIASUS",
     )
 
     parser.add_argument(
-        "--EPOCA",
+        "--epoca",
         dest="epoca",
-        default="200801_",
         help="Epocas das versões das origems, Valor default: 200801_",
     )
 
     parser.add_argument(
-        "--SISTEMA",
+        "--sistema",
         dest="sistema",
-        default="AD",
         help="Tipo de arquivo a ser baixado, o layout muda de acordo com o tipo de arquivo, Valor default: PA",
     )
 
     parser.add_argument(
-        "--UF", dest="uf", default="MG", help="Estados da unidade de saude"
+        "--uf", dest="uf",help="Estados da unidade de saude"
     )
 
     parser.add_argument(
-        "--DATA_COMECO",
+        "--data_comeco",
         dest="data_comeco",
-        default="2301",
         help="Data dos arquivos a serem baixados no formato YYMM(ano, e mes: 2301), Janeiro de 2023",
     )
 
     parser.add_argument(
-        "--DATA_TERMINO",
+        "--data_termino",
         dest="data_termino",
-        default="2305",
         help="Data dos arquivos a serem baixados no formato YYMM(ano, e mes: 2301), Janeiro de 2023",
     )
 

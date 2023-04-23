@@ -1,5 +1,6 @@
 import os
 import tempfile
+import argparse
 from io import BytesIO
 
 from google.cloud import storage
@@ -39,7 +40,23 @@ def convert_and_upload_parquet(bucket_name, blob_name, silver_bucket_name, clien
         os.remove(temp_dbc.name)
 
 
-def main():
+def main(
+    epoca,
+    sistema,
+    uf,
+    data_comeco,
+    data_termino,
+):
+    """Baixa arquivo ou arquivos do datasus e salva na zona bronze do projeto
+
+    Args:
+        epoca (str): Epocas das versões das origems, Valor default: 200801_
+        sistema (str): Tipo de arquivo a ser baixado, o layout muda de acordo com o tipo de arquivo, Valor default: PA
+        uf (str): Estados da unidade de saude
+        data_comeco (str): Data dos arquivos a serem baixados no formato YYMM(ano, e mes: 2301), Janeiro de 2023
+        data_termino (str): Data dos arquivos a serem baixados no formato YYMM(ano, e mes: 2301), Janeiro de 2023
+    """
+
     INPUT_BUCKET_NAME = "self-service-analytics-tdah-bronze"
     OUTPUT_BUCKET_NAME = "self-service-analytics-tdah-silver"
 
@@ -68,4 +85,42 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # Validando se o file_name foi passado
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--epoca",
+        dest="epoca",
+        help="Epocas das versões das origems, Valor default: 200801_",
+    )
+
+    parser.add_argument(
+        "--sistema",
+        dest="sistema",
+        help="Tipo de arquivo a ser baixado, o layout muda de acordo com o tipo de arquivo, Valor default: PA",
+    )
+
+    parser.add_argument(
+        "--uf", dest="uf",help="Estados da unidade de saude"
+    )
+
+    parser.add_argument(
+        "--data_comeco",
+        dest="data_comeco",
+        help="Data dos arquivos a serem baixados no formato YYMM(ano, e mes: 2301), Janeiro de 2023",
+    )
+
+    parser.add_argument(
+        "--data_termino",
+        dest="data_termino",
+        help="Data dos arquivos a serem baixados no formato YYMM(ano, e mes: 2301), Janeiro de 2023",
+    )
+
+    kargs, args = parser.parse_known_args()
+    main(
+        kargs.epoca,
+        kargs.sistema,
+        kargs.uf,
+        kargs.data_comeco,
+        kargs.data_termino,
+    )
+
