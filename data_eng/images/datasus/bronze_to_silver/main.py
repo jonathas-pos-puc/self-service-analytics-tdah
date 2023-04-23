@@ -65,6 +65,13 @@ def main(
     bronze_files = list_files(INPUT_BUCKET_NAME, storage_client)
     silver_files = list_files(OUTPUT_BUCKET_NAME, storage_client)
 
+    print("bronze_files")
+    print(bronze_files)
+
+    print("silver_files")
+    print(silver_files)
+
+
     new_files = [
         file
         for file in bronze_files
