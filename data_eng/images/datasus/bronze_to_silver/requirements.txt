@@ -1,5 +1,6 @@
 pandas
 pyarrow
-pysus
 dbfread
 google-cloud-storage
+pyreaddbc
+pysus
