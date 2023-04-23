@@ -1,0 +1,4 @@
+pandas
+pyarrow
+dbfread
+google-cloud-storage
