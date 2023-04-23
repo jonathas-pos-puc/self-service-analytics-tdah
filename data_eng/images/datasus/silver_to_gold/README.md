@@ -1,5 +1,5 @@
 # SILVER TO GOLD
-> 
+>
 
 ### Parametros
 
@@ -15,6 +15,6 @@ docker push "gcr.io/${PROJECT_ID}/silver-to-gold:latest"
 
 ### Testar a imagem localmente
 ```
-docker run --name test-img-latest silver-to-gold:latest --url=URL 
+docker run --name test-img-latest silver-to-gold:latest
 ```
 

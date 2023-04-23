@@ -136,9 +136,7 @@ if __name__ == "__main__":
         help="Tipo de arquivo a ser baixado, o layout muda de acordo com o tipo de arquivo, Valor default: PA",
     )
 
-    parser.add_argument(
-        "--uf", dest="uf",help="Estados da unidade de saude"
-    )
+    parser.add_argument("--uf", dest="uf", help="Estados da unidade de saude")
 
     parser.add_argument(
         "--data_comeco",
