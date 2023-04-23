@@ -1,50 +1,42 @@
-import argparse
-from io import BytesIO, StringIO
+import os
+import tempfile
+from io import BytesIO
 
-import pandas as pd
-from dbfread import DBF
 from google.cloud import storage
+from pysus.utilities.readdbc import read_dbc
+
+
+def dbc_to_dataframe(input_path):
+    """Converte um arquivo DBC para Parquet."""
+    data = read_dbc(input_path, encoding="iso-8859-1")
+    return data
 
 
 def list_files(bucket_name, client):
-    """_summary_
-
-    Args:
-        bucket_name (_type_): _description_
-        client (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
     bucket = client.get_bucket(bucket_name)
     blobs = list(bucket.list_blobs())
     return [blob.name for blob in blobs]
 
 
 def convert_and_upload_parquet(bucket_name, blob_name, silver_bucket_name, client):
-    """_summary_
-
-    Args:
-        bucket_name (_type_): _description_
-        blob_name (_type_): _description_
-        silver_bucket_name (_type_): _description_
-        client (_type_): _description_
-    """
     bronze_bucket = client.get_bucket(bucket_name)
     silver_bucket = client.get_bucket(silver_bucket_name)
     blob = bronze_bucket.blob(blob_name)
 
-    dbf_data = blob.download_as_text()
+    with tempfile.NamedTemporaryFile(suffix=".dbc", delete=False) as temp_dbc:
+        blob.download_to_file(temp_dbc)
+        temp_dbc.flush()
 
-    table = DBF(StringIO(dbf_data), load=True)
-    df = pd.DataFrame(iter(table))
+        df = dbc_to_dataframe(temp_dbc.name)
 
-    parquet_buffer = BytesIO()
-    df.to_parquet(parquet_buffer)
+        parquet_buffer = BytesIO()
+        df.to_parquet(parquet_buffer)
 
-    parquet_blob_name = blob_name.replace(".dbc", ".parquet")
-    parquet_blob = silver_bucket.blob(parquet_blob_name)
-    parquet_blob.upload_from_file(parquet_buffer, rewind=True)
+        parquet_blob_name = blob_name.replace(".dbc", ".parquet")
+        parquet_blob = silver_bucket.blob(parquet_blob_name)
+        parquet_blob.upload_from_file(parquet_buffer, rewind=True)
+
+        os.remove(temp_dbc.name)
 
 
 def main():
@@ -54,18 +46,16 @@ def main():
     storage_client = storage.Client.from_service_account_json("credentials.json")
 
     bronze_files = list_files(INPUT_BUCKET_NAME, storage_client)
-    print("bronze_files")
-    print(bronze_files)
-
     silver_files = list_files(OUTPUT_BUCKET_NAME, storage_client)
-    print("silver_files")
-    print(silver_files)
 
     new_files = [
         file
         for file in bronze_files
         if file.replace(".dbc", ".parquet") not in silver_files
     ]
+
+    print("new_files")
+    print(new_files)
 
     for file in new_files:
         print(f"Convertendo e salvando o arquivo: {file}")

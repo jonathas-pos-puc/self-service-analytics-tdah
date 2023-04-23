@@ -92,7 +92,7 @@ def main(
     ftp.login()
 
     storage_client = storage.Client.from_service_account_json("credentials.json")
-    #storage_client = storage.Client()
+    # storage_client = storage.Client()
     output_bucket = storage_client.get_bucket(OUTPUT_BUCKET_NAME)
     ftp_path = f"/dissemin/publicos/{fonte}/{epoca}/Dados/"
     print(f"ftp_path: {ftp_path}")

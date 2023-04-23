@@ -6,53 +6,45 @@ import pandas as pd
 import pyarrow as pa
 import requests
 from google.cloud import storage
+from google.cloud import bigquery
+import pandas as pd
+import pyarrow
+from io import BytesIO, StringIO
 
 
-def convert_csv_to_parquet(csv_path, parquet_path):
-    df = pd.read_csv(csv_path)
-    table = pa.Table.from_pandas(df)
-    pa.parquet.write_table(table, parquet_path)
-
-
-def main(input_blob_name, output_blob_name):
-    """_summary_
-
-    Args:
-        input_blob_name (str): _description_
-        output_blob_name (str): _description_
-    """
-
-    input_bucket_name = "self-service-analytics-tdah-silver"
-    output_bucket_name = "self-service-analytics-tdah-gold"
-
+def main():
     storage_client = storage.Client.from_service_account_json("credentials.json")
-    input_bucket = storage_client.get_bucket(input_bucket_name)
-    output_bucket = storage_client.get_bucket(output_bucket_name)
+    bigquery_client = bigquery.Client.from_service_account_json("credentials.json")
 
-    input_blob = input_bucket.get_blob(input_blob_name)
-    if not input_blob:
-        print(f"Input file not found: {input_bucket_name}/{input_blob_name}")
-        sys.exit(1)
+    bucket_name = 'self-service-analytics-tdah-silver'
+    source_blob_name = 'DATASUS/ADMG2301.parquet'
+    dataset_id = 'datasus'
+    table_id = 'siasus'
 
-    csv_data = input_blob.download_as_text()
-    with open("temp.csv", "w") as f:
-        f.write(csv_data)
+    # Buscar o arquivo Parquet do GCS
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = storage.Blob(source_blob_name, bucket)
+    content = blob.download_as_bytes()
 
-    convert_csv_to_parquet("temp.csv", "temp.parquet")
+    # Ler o arquivo Parquet usando o Pandas
+    df = pd.read_parquet(BytesIO(content), engine='pyarrow')
 
-    with open("temp.parquet", "rb") as f:
-        output_blob = output_bucket.blob(output_blob_name)
-        output_blob.upload_from_file(f)
+    print(df.head())  # Exibe as primeiras linhas do DataFrame
 
-    print(f"File converted and uploaded to: {output_bucket_name}/{output_blob_name}")
+    # Carregar o DataFrame do Pandas no BigQuery
+    table_ref = bigquery_client.dataset(dataset_id).table(table_id)
+    job_config = bigquery.LoadJobConfig()
+    job_config.source_format = bigquery.SourceFormat.PARQUET
+    job_config.autodetect = True
+    job_config.write_disposition = bigquery.WriteDisposition.WRITE_TRUNCATE
+
+    load_job = bigquery_client.load_table_from_dataframe(df, table_ref, job_config=job_config)
+    load_job.result()  # Aguardar a conclusão do job
+
+    print(f"Carregado {load_job.output_rows} linhas na tabela {dataset_id}.{table_id}.")
 
 
 if __name__ == "__main__":
     # Validando se o file_name foi passado
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input_blob", dest="input_blob", help="input_blob")
-
-    parser.add_argument("--output_blob", dest="output_blob", help="output_blob")
-
-    known_args, args = parser.parse_known_args()
-    main(known_args.input_blob, known_args.output_blob)
+    main()
