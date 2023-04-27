@@ -71,7 +71,6 @@ def main(
     print("silver_files")
     print(silver_files)
 
-
     new_files = [
         file
         for file in bronze_files
