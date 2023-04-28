@@ -8,3 +8,14 @@ CREATE TABLE `self-service-analytics-tdah.dw.f_boletim` (
   cid INT64,
   tem_tdah BOOL,
 );
+
+CREATE TABLE `self-service-analytics-tdah.dw.f_boletim`
+SELECT
+  CODUNI as ,
+  GESTAO as ,
+  CASE
+    WHEN cid LIKE 'F90%' THEN TRUE
+    ELSE FALSE
+  END AS tem_tdah
+FROM
+  `self-service-analytics-tdah.datasus.d`;
