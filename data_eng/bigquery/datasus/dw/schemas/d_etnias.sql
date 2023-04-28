@@ -1,4 +1,5 @@
 CREATE TABLE `self-service-analytics-tdah.dw.d_etnias` (
-  id STRING,
-  etnia STRING,
+  id INT64,
+  nome STRING,
+  codigo STRING,
 );
