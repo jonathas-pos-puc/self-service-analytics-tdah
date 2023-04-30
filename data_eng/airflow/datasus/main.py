@@ -9,9 +9,9 @@ from airflow.providers.google.cloud.operators.kubernetes_engine import (
     GKEStartPodOperator,
 )
 
-GCP_PROJECT_ID = Variable.get("gcp_project_id")
-GKE_LOCATION = Variable.get("gke_location")
-GKE_CLUSTER_NAME = Variable.get("gke_cluster_name")
+GCP_PROJECT_ID = "self-service-analytics-tdah"
+GKE_LOCATION = "us-central1"
+GKE_CLUSTER_NAME = "us-central1-ssa-tdah-85388d06-gke"
 
 default_args = {
     "owner": "airflow",
@@ -36,29 +36,6 @@ with DAG(
 
     end = DummyOperator(
         task_id="end",
-    )
-
-    create_cluster = GKECreateClusterOperator(
-        task_id="create_cluster",
-        project_id=GCP_PROJECT_ID,
-        location=GKE_LOCATION,
-        cluster_name=GKE_CLUSTER_NAME,
-        body={
-            "cluster": {
-                "name": GKE_CLUSTER_NAME,
-                "initial_node_count": 1,
-                "node_config": {
-                    "machine_type": "n1-standard-1",
-                    "oauth_scopes": ["https://www.googleapis.com/auth/cloud-platform"],
-                },
-                "addons_config": {
-                    "http_load_balancing": {},
-                    "horizontal_pod_autoscaling": {},
-                    "network_policy_config": {"disabled": True},
-                },
-            }
-        },
-        dag=dag,
     )
 
     ftp_to_bronze = GKEStartPodOperator(
@@ -94,21 +71,10 @@ with DAG(
         arguments=["main.py"],
     )
 
-    delete_cluster = GKEDeleteClusterOperator(
-        task_id="delete_cluster",
-        project_id=GCP_PROJECT_ID,
-        name=GKE_CLUSTER_NAME,
-        location=GKE_LOCATION,
-        trigger_rule="all_done",  # This ensures the cluster is deleted even if the conversion task fails
-        dag=dag,
-    )
-
     (
         start
-        >> create_cluster
         >> ftp_to_bronze
         >> bronze_to_silver
         >> silver_to_bq
-        >> delete_cluster
         >> end
     )

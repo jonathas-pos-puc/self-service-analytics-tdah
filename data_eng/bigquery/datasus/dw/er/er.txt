@@ -1,0 +1,108 @@
+Table d_cbos {
+  id INTEGER
+  nome STRING
+  codigo STRING
+}
+
+Table d_cids {
+  id INTEGER
+  codigo STRING
+  opc STRING
+  categoria STRING
+  sub_categoria STRING
+  descricao STRING
+  restrito_sexo STRING
+  campos_rad STRING
+  estadio STRING
+  repete_rad STRING
+}
+
+Table d_etnias {
+  id INTEGER
+  nome STRING
+  codigo STRING
+}
+
+Table d_munincipios {
+  id INTEGER
+  nome STRING
+  codigo INTEGER
+}
+
+Table d_pacientes {
+  id INTEGER
+  cns STRING
+  data_processamento STRING
+  sexo_id INTEGER
+  raca_id INTEGER
+  municipio_id INTEGER
+  etnia_id INTEGER
+  cid STRING
+  data_nascimento DATE
+  tem_tdah STRING
+}
+
+Table d_racas {
+  id INTEGER
+  nome STRING
+  codigo STRING
+}
+
+Table d_sexos {
+  id INTEGER
+  nome STRING
+  codigo STRING
+}
+
+Table d_tipo_estabelecimentos {
+  id INTEGER
+  nome STRING
+  codigo INTEGER
+}
+
+Table d_tipo_financiamentos {
+  id INTEGER
+  nome STRING
+  codigo STRING
+}
+
+Table d_tipo_prestadores {
+  id INTEGER
+  nome STRING
+  codigo INTEGER
+}
+
+Table f_boletim {
+  id_cnes STRING
+  gestao STRING
+  municipio_estabelecimento_id INTEGER
+  tipo_estabelecimento_id INTEGER
+  tipo_prestadore_id INTEGER
+  data_processamento STRING
+  data_atendimento STRING
+  cod_procedimento STRING
+  tipo_financiamento_id INTEGER
+  cns_profissional STRING
+  cbo_id INTEGER
+  cid_id INTEGER
+  cns_paciente STRING
+  idade_paciente STRING
+  quantidade_produzida FLOAT
+  quantidade_aprovada FLOAT
+  valor_produzido FLOAT
+  valor_aprovado FLOAT
+}
+
+Ref: d_racas.id - d_pacientes.raca_id
+Ref: d_sexos.id - d_pacientes.sexo_id
+Ref: d_etnias.id - d_pacientes.etnia_id
+Ref: d_munincipios.id - d_pacientes.municipio_id
+
+
+Ref: d_munincipios.id - f_boletim.municipio_estabelecimento_id
+Ref: d_tipo_estabelecimentos.id - f_boletim.tipo_estabelecimento_id
+Ref: d_tipo_prestadores.id - f_boletim.tipo_prestadore_id
+Ref: d_tipo_financiamentos.id - f_boletim.tipo_financiamento_id
+Ref: d_cbos.id - f_boletim.cbo_id
+Ref: d_cids.id - f_boletim.cid_id
+Ref: d_pacientes.cns - f_boletim.cns_paciente
